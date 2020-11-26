@@ -4,12 +4,12 @@ public class Dicionario {
     private Meta meta;
 
     public Meta getMeta() {
-        return meta;
+      return meta;
     }
 
     public void setMeta(Meta meta) {
-		this.meta = meta;
-    }
+      this.meta = meta;
+    } 
 }
 
     

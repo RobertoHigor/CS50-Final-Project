@@ -6,7 +6,7 @@ public class Meta {
     private String id;
     
     @JsonProperty("app-shortdef")
-    private AppShortdef appShortdef;
+    private AppShortDef appShortdef;
 
     public String getId() {
         return id;
@@ -16,11 +16,11 @@ public class Meta {
         this.id = id;
     }
 
-    public AppShortdef getAppShortdef() {
+    public AppShortDef getAppShortdef() {
         return appShortdef;
     }
 
-    public void setAppShortdef(AppShortdef appShortdef) {
+    public void setAppShortdef(AppShortDef appShortdef) {
         this.appShortdef = appShortdef;
     }
 

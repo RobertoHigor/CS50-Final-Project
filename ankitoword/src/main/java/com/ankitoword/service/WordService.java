@@ -7,8 +7,6 @@ import com.ankitoword.entity.Dicionario;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,35 +20,30 @@ public class WordService {
     @Value("${merriam.key}")
     private String APIKey;
 
-    public List<Dicionario> helloWorld() {
+    public List<Dicionario> getWords(String palavra) {
         
-        //https://gturnquist-quoters.cfapps.io/api/random", 200);
-        // Mono permite tratar o retorno quando a requisição finalizar sem bloquear o método.
+        // OMono permite tratar o retorno quando a requisição finalizar sem bloquear o método.
    
-        Flux<Dicionario> result = this.webClient
-            .method(HttpMethod.GET)
-            .uri(builder -> builder.path("/yield").queryParam("key", APIKey).build())
-            .retrieve()
+        Flux<Dicionario> fluxDicionario = this.webClient
+            .get()
+            .uri(builder -> builder.path("/"+palavra).queryParam("key", APIKey).build())
+            .retrieve() //Retorna o response-spec
             .bodyToFlux(Dicionario.class);
-        // exchange() ao invés de retrieve() permite tratar erros.
-        // O retrieve retorna anas o response-spec
+            // Em vez do retrieve(), existe o exchange() que retorna os cabeçalhos e permite tratar erros.
 
-        // Escuta aresposta do mono, sendo executado na mesma hora que a requisição retornar
-        result.subscribe(w -> {
+        // O subscribe é executado assim que a requisição retornar
+        fluxDicionario.subscribe(w -> {
             System.out.println("Fim da requisição");
         });
 
-        List<Dicionario> palavras = new ArrayList<>();
-        palavras = result.collectList().block(); // Esperar a 
-        // No caso de várias requisições, ao invés de block(), existe o zip()
-        /* Ex: Mono.zip(mono1, mono2).map(tuple -> { 
-            tuple.getT1().setPreco(tuple.getT2().getPreço));
-        });
-        */
+        List<Dicionario> dicionarios = new ArrayList<>();
+        dicionarios = fluxDicionario.collectList().block(); // Esperar a 
+        
+
         /* Por ser um método non-blocking, diferente de RestTemplate, o restante
         * do código continua a ser executado mesmo antes da requisição terminar.
         * Deve-se tomar cuidado pois é possível retoranr o método antes da requsição.
         */
-        return palavras;
+        return dicionarios;
     }
 }

@@ -1,12 +1,13 @@
 package com.ankitoword.entity;
 
-public class AppShortdef {
+public class AppShortDef {
     public String hw;
     public String fl;
     public String[] def;
 
     public String getHw() {
-        return hw;
+        String[] split = hw.split(":");
+        return split[0];
     }
 
     public void setHw(String hw) {
