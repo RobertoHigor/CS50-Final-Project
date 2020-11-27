@@ -4,7 +4,7 @@ public class AppShortDef {
     public String hw;
     public String fl;
     public String[] def;
-
+    
     public String getHw() {
         String[] split = hw.split(":");
         return split[0];

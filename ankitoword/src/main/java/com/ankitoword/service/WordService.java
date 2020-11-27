@@ -31,11 +31,6 @@ public class WordService {
             .bodyToFlux(Dicionario.class);
             // Em vez do retrieve(), existe o exchange() que retorna os cabeçalhos e permite tratar erros.
 
-        // O subscribe é executado assim que a requisição retornar
-        fluxDicionario.subscribe(w -> {
-            System.out.println("Fim da requisição");
-        });
-
         List<Dicionario> dicionarios = new ArrayList<>();
         dicionarios = fluxDicionario.collectList().block(); // Esperar a 
         

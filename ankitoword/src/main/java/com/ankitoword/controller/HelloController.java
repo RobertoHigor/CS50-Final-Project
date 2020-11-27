@@ -31,10 +31,10 @@ public class HelloController {
         for (Dicionario palavra : palavras) {
 
             System.out.println(palavra.getMeta().getId());    
-            System.out.println(palavra.getMeta().getAppShortdef().getDef()[0]);    
+            System.out.println(palavra.getMeta().getAppShortDef().getDef()[0]);    
         }
         
-        return palavras.get(0).getMeta().getAppShortdef().getDef()[0];       
+        return palavras.get(0).getMeta().getAppShortDef().getDef()[0];       
     }*/
 
     @GetMapping("/palavras")
@@ -43,18 +43,24 @@ public class HelloController {
         List<Dicionario> listaDicionarios = wordService.getWords(palavra);
 
         //TODO: Tratar erro de palavra não encontrada
+        //TODO: Lidar com a query que pode retornar array de palavras parecidas
         if (palavra == null){
             return "index";
         }
 
         List<Meta> listaMetas = new ArrayList<>();
         for (Dicionario dicionario : listaDicionarios){
-            listaMetas.add(dicionario.getMeta());
+            if (dicionario.getMeta().getAppShortDef() != null){
+                System.out.println("Objeto adicionado");
+                listaMetas.add(dicionario.getMeta());
+            } else {
+                System.out.println("Entrou no else");
+            }
         }
 
         List<AppShortDef> palavras = new ArrayList<>();
-        for (Meta meta : listaMetas){
-            palavras.add(meta.getAppShortdef());
+        for (Meta meta : listaMetas){          
+            palavras.add(meta.getAppShortDef());
         }
        
         theModel.addAttribute("palavras", palavras);
