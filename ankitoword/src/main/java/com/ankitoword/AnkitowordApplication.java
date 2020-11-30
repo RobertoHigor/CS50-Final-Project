@@ -21,6 +21,14 @@ public class AnkitowordApplication {
 			.build();
 	}
 
+	@Bean
+	public WebClient ankiWebClient(WebClient.Builder builder) {		
+		return builder
+			.baseUrl("http://localhost:8765/")
+			.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.build();
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(AnkitowordApplication.class, args);
 	}

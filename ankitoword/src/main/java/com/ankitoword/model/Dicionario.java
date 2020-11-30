@@ -1,4 +1,4 @@
-package com.ankitoword.entity;
+package com.ankitoword.model;
 
 public class Dicionario {
     private Meta meta;

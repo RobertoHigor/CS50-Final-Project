@@ -3,9 +3,10 @@ package com.ankitoword.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ankitoword.entity.AppShortDef;
-import com.ankitoword.entity.Dicionario;
-import com.ankitoword.entity.Meta;
+import com.ankitoword.model.AppShortDef;
+import com.ankitoword.model.Dicionario;
+import com.ankitoword.model.Meta;
+import com.ankitoword.service.AnkiService;
 import com.ankitoword.service.WordService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +23,8 @@ public class HelloController {
     @Autowired
     private WordService wordService;
 
-    /*@GetMapping("/hello")
-    public String hello() {
-        List<Dicionario> palavras = wordService.helloWorld();
-
-        String word;
-        String label;
-        String[] definition;
-        for (Dicionario palavra : palavras) {
-
-            System.out.println(palavra.getMeta().getId());    
-            System.out.println(palavra.getMeta().getAppShortDef().getDef()[0]);    
-        }
-        
-        return palavras.get(0).getMeta().getAppShortDef().getDef()[0];       
-    }*/
+    @Autowired
+    private AnkiService ankiService;
 
     @GetMapping("/palavras")
     public String listWords(@RequestParam(value = "search", required = false) String palavra, Model theModel) {
@@ -73,8 +61,14 @@ public class HelloController {
        
         // Adicionar as palavras da lista (contendo palavra, tipo e definição)
         theModel.addAttribute("palavras", palavras);
-        theModel.addAttribute("search", palavra);
+        //theModel.addAttribute("search", palavra);
         
         return "index";    
+    }
+
+    @GetMapping("/anki")
+    public String listAllDecks(Model theModel) {
+        System.out.println(ankiService.getAllDecks());
+        return "index";
     }
 }
