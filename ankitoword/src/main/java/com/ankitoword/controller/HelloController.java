@@ -9,6 +9,7 @@ import com.ankitoword.entity.Meta;
 import com.ankitoword.service.WordService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.codec.DecodingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,15 +40,21 @@ public class HelloController {
 
     @GetMapping("/palavras")
     public String listWords(@RequestParam(value = "search", required = false) String palavra, Model theModel) {
-        //String palavra = "ball";
-        List<Dicionario> listaDicionarios = wordService.getWords(palavra);
-
-        //TODO: Tratar erro de palavra não encontrada
-        //TODO: Lidar com a query que pode retornar array de palavras parecidas
+        // Se a busca estiver vazia, apenas retornar o index
         if (palavra == null){
             return "index";
         }
 
+        List<Dicionario> listaDicionarios;
+        try
+        {
+            listaDicionarios = wordService.getWords(palavra);
+        } catch (DecodingException exc) {
+            System.out.println(exc);
+            return "index";
+        }    
+
+        // Criar uma lista com as metas
         List<Meta> listaMetas = new ArrayList<>();
         for (Dicionario dicionario : listaDicionarios){
             if (dicionario.getMeta().getAppShortDef() != null){
@@ -58,12 +65,15 @@ public class HelloController {
             }
         }
 
+        // Pegar os dados das metas e criar uma lista de palavras do AppShortDef
         List<AppShortDef> palavras = new ArrayList<>();
         for (Meta meta : listaMetas){          
             palavras.add(meta.getAppShortDef());
         }
        
+        // Adicionar as palavras da lista (contendo palavra, tipo e definição)
         theModel.addAttribute("palavras", palavras);
+        theModel.addAttribute("search", palavra);
         
         return "index";    
     }

@@ -1,7 +1,6 @@
 package com.ankitoword.entity;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +9,6 @@ public class Meta {
     private String id;
     
     @JsonProperty(value="app-shortdef")
-    //@JsonInclude(Include.NON_EMPTY)
     private AppShortDef appShortDef;
 
     public String getId() {

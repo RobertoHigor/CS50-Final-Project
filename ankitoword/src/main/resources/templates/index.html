@@ -12,8 +12,8 @@
 <body>
 <div class="container">
     <h1>Search a word definition</h1>
-    <form th:action="@{/palavras}" method="get">
-        <input type="text" name="search" id="search" th:value="${search}" required placeholder="Word to search"/>
+    <form class ="form-group" th:action="@{/palavras}" method="get">
+        <input type="text" class="form-control" name="search" id="search" th:value="${search}" required placeholder="Word to search"/>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
     
