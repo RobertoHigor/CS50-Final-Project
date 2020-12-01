@@ -3,10 +3,9 @@ package com.ankitoword.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ankitoword.model.Anki.Anki;
 import com.ankitoword.model.MerriamWebster.AppShortDef;
-import com.ankitoword.model.MerriamWebster.RootWebster;
 import com.ankitoword.model.MerriamWebster.Meta;
+import com.ankitoword.model.MerriamWebster.RootWebster;
 import com.ankitoword.service.AnkiService;
 import com.ankitoword.service.WordService;
 
@@ -14,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,7 +28,9 @@ public class HelloController {
     private AnkiService ankiService;
 
     @GetMapping("/palavras")
-    public String listWords(@RequestParam(value = "search", required = false) String palavra, Model theModel) {
+    public String listWords(
+        @RequestParam(value = "search", required = false) String palavra, 
+        Model theModel) {
         // Se a busca estiver vazia, apenas retornar o index
         if (palavra == null){
             return "index";
@@ -67,7 +66,6 @@ public class HelloController {
        
         // Adicionar as palavras da lista (contendo palavra, tipo e definição)
         theModel.addAttribute("palavras", palavras);
-        theModel.addAttribute("appShortDef", new AppShortDef());
         theModel.addAttribute("decks", listaDecks);
         
         return "index";    
@@ -76,11 +74,17 @@ public class HelloController {
     @PostMapping("/save")
     public String listAllDecks(
         @RequestParam(value = "deck", required = true) String deck, 
-        @RequestParam(value = "back", required = true) String backText,
-        @ModelAttribute AppShortDef appShortDef) {
-            
+        @RequestParam(value = "back", required = true) String[] def,
+        @RequestParam(value = "hw") String hw,
+        @RequestParam(value = "fl") String fl) {
+
+        System.out.println("APPSHORTDEF: " + fl);
+        System.out.println("APPSHORTDEF: " + hw);
         System.out.println("@@@@@@@@@@@@@"+deck);
-        ankiService.save(appShortDef, backText, deck);    
+
+        AppShortDef appShortDef = new AppShortDef(hw, fl, def);
+        ankiService.save(appShortDef, deck);    
+       
         return "redirect:/";
     }
 }

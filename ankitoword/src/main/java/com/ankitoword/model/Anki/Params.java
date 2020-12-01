@@ -15,5 +15,10 @@ public class Params {
         this.note = note;
     }
 
+    @Override
+    public String toString() {
+        return "Params [note=" + note + "]";
+    }
+
     
 }

@@ -21,22 +21,22 @@
 
     <!-- Loop de formulários-->
     <div class="row justify-content-center">    
-        <th:block th:each="appShortDef : ${palavras}">
+        <th:block th:each="palavra : ${palavras}">
             <div class="card col-sm-3 m-2">
-                <form action="#" th:action="@{/save}" th:object="${appShortDef}" method="POST">
+                <form action="#" th:action="@{/save}" th:object="${palavra}" method="POST">
                     <div class="form-group">
                         
                         <!-- Values for data binding-->
-                        <input type="hidden" th:field="*{hw}"/>
-                        <input type="hidden" th:field="*{fl}"/>
-                        <input type="hidden" th:field="*{def}"/>
+                        <input name="hw" type="hidden" th:value="*{hw}"/>
+                        <input name="fl" type="hidden" th:value="*{fl}"/>
+                        
 
                         <!-- Front-->
                         <label for="front" class="card-title">Front</label>
-                        <input type="text" th:value="*{hw} + ' ' + *{fl}" id="front" class="form-control"/>
+                        <input type="text" th:value="${palavra.hw} + ' ' + ${palavra.fl}" id="front" class="form-control"/>
                         <!-- Back-->
                         <label for="back">Back</label>
-                        <textarea name="back" rows="3" class="form-control" id="back" th:inline="text"> [[*{def[0]}]] </textarea>
+                        <textarea name="back" rows="3" class="form-control" id="back" th:inline="text"> [[${palavra.def[0]}]] </textarea>
                         <hr>
 
                         <!-- Deck names-->

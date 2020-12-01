@@ -45,5 +45,13 @@ public class Note {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }    
+    }
+
+    @Override
+    public String toString() {
+        return "Note [deckName=" + deckName + ", fields=" + fields + ", modelName=" + modelName + ", tags=" + tags
+                + "]";
+    }
+    
+    
 }

@@ -1,12 +1,9 @@
 package com.ankitoword.model.MerriamWebster;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class AppShortDef {
     public String hw;
     public String fl;
-    public String[] def;
+    public String[] def;   
     
     public String getHw() {
         //String[] split = hw.split(":");
@@ -31,6 +28,15 @@ public class AppShortDef {
     }
 
     public void setDef(String[] def) {
+        this.def = def;
+    }
+
+    // Construtores
+    public AppShortDef() {} // Construtor vazio para o Spring
+
+    public AppShortDef(String hw, String fl, String[] def) {
+        this.hw = hw;
+        this.fl = fl;
         this.def = def;
     }
 
