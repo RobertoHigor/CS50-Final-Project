@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 public class AnkiService {
     
     //TODO: Receber resposta do POST diretamente como Object, ao invés de String JSON
+    //TODO: Testar o envio de sub-cartões, como English::verbs
 
     @Autowired
     private WebClient ankiWebClient;
@@ -49,7 +50,7 @@ public class AnkiService {
 
         // Criando o objeto ACtion
         Fields fields = new Fields(frontText, tempPalavra.getDef()[0]);
-        
+
         // Adicionando a tag
         List<String> tags = new ArrayList<>();
         tags.add(tempPalavra.getFl());
