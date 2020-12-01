@@ -1,10 +1,23 @@
 package com.ankitoword.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ankitoword.Helpers.JsonHelper;
+import com.ankitoword.model.Anki.Action;
+import com.ankitoword.model.Anki.Anki;
+import com.ankitoword.model.Anki.Fields;
+import com.ankitoword.model.Anki.Note;
+import com.ankitoword.model.Anki.Params;
+import com.ankitoword.model.MerriamWebster.AppShortDef;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class AnkiService {
@@ -12,20 +25,37 @@ public class AnkiService {
     @Autowired
     private WebClient ankiWebClient;
 
-    public String getAllDecks() {
-        String actionJson = "{\n" +
-                                "\"action\":\"deckNamesAndIds\","+
-                                "\"version\": 6\n"+
-                            "}";        
+    public Anki getAllDecks() {      
+        Action action = new Action("deckNames", 6);                       
                                 
-        String response = this.ankiWebClient.post().uri("/")
+        Mono<String> monoAnki= this.ankiWebClient.post().uri("/")
             .accept(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(actionJson))
-            .retrieve()
-            .bodyToMono(String.class).block();
-        
-        System.out.println(response);
-        
-        return response;
+            .body(BodyInserters.fromValue(action))
+            .retrieve().bodyToMono(String.class);
+
+        //https://stackoverflow.com/questions/62915284/spring-webclient-not-processing-json-content
+        String jsonValue = monoAnki.block();
+        System.out.println(jsonValue);        
+
+        Anki ankiObject = JsonHelper.toObject(jsonValue, Anki.class);
+    
+        return ankiObject;
     }
+
+	public Anki save(AppShortDef tempPalavra, String backText, String deck) {
+        String frontText = tempPalavra.getHw() + " " + tempPalavra.getFl();
+        System.out.println("Back Text"+ backText);
+
+        Fields fields = new Fields(frontText, backText);
+        List<String> tags = new ArrayList<>();
+        tags.add(tempPalavra.getFl());
+        Note note = new Note(deck, "Basic", fields, tags);
+        Params params = new Params(note);
+        Action action = new Action("addNote", 6, params);
+
+        Anki result = this.ankiWebClient.put().uri("/")
+            .accept(MediaType.APPLICATION_JSON).bodyValue(action)
+            .retrieve().bodyToMono(Anki.class).block();
+        return result;
+	}
 }

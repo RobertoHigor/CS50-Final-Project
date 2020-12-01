@@ -1,6 +1,6 @@
-package com.ankitoword.model;
+package com.ankitoword.model.MerriamWebster;
 
-public class Dicionario {
+public class RootWebster {
     private Meta meta;
 
     public Meta getMeta() {

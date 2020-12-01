@@ -3,9 +3,10 @@ package com.ankitoword.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ankitoword.model.AppShortDef;
-import com.ankitoword.model.Dicionario;
-import com.ankitoword.model.Meta;
+import com.ankitoword.model.Anki.Anki;
+import com.ankitoword.model.MerriamWebster.AppShortDef;
+import com.ankitoword.model.MerriamWebster.RootWebster;
+import com.ankitoword.model.MerriamWebster.Meta;
 import com.ankitoword.service.AnkiService;
 import com.ankitoword.service.WordService;
 
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 //@RestController
@@ -33,10 +37,12 @@ public class HelloController {
             return "index";
         }
 
-        List<Dicionario> listaDicionarios;
+        List<RootWebster> listaDicionarios;
+        List<String> listaDecks;
         try
         {
             listaDicionarios = wordService.getWords(palavra);
+            listaDecks = ankiService.getAllDecks().getResult();
         } catch (DecodingException exc) {
             System.out.println(exc);
             return "index";
@@ -44,12 +50,12 @@ public class HelloController {
 
         // Criar uma lista com as metas
         List<Meta> listaMetas = new ArrayList<>();
-        for (Dicionario dicionario : listaDicionarios){
+        for (RootWebster dicionario : listaDicionarios){
             if (dicionario.getMeta().getAppShortDef() != null){
-                System.out.println("Objeto adicionado");
+                //System.out.println("Objeto adicionado");
                 listaMetas.add(dicionario.getMeta());
             } else {
-                System.out.println("Entrou no else");
+                //System.out.println("Entrou no else");
             }
         }
 
@@ -61,14 +67,20 @@ public class HelloController {
        
         // Adicionar as palavras da lista (contendo palavra, tipo e definição)
         theModel.addAttribute("palavras", palavras);
-        //theModel.addAttribute("search", palavra);
+        theModel.addAttribute("appShortDef", new AppShortDef());
+        theModel.addAttribute("decks", listaDecks);
         
         return "index";    
     }
 
-    @GetMapping("/anki")
-    public String listAllDecks(Model theModel) {
-        System.out.println(ankiService.getAllDecks());
-        return "index";
+    @PostMapping("/save")
+    public String listAllDecks(
+        @RequestParam(value = "deck", required = true) String deck, 
+        @RequestParam(value = "back", required = true) String backText,
+        @ModelAttribute AppShortDef appShortDef) {
+            
+        System.out.println("@@@@@@@@@@@@@"+deck);
+        ankiService.save(appShortDef, backText, deck);    
+        return "redirect:/";
     }
 }

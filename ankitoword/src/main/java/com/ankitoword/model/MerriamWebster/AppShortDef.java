@@ -1,13 +1,17 @@
-package com.ankitoword.model;
+package com.ankitoword.model.MerriamWebster;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class AppShortDef {
     public String hw;
     public String fl;
     public String[] def;
     
     public String getHw() {
-        String[] split = hw.split(":");
-        return split[0];
+        //String[] split = hw.split(":");
+        //return split[0];
+        return this.hw;
     }
 
     public void setHw(String hw) {

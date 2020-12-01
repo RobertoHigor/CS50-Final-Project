@@ -1,4 +1,4 @@
-package com.ankitoword.model;
+package com.ankitoword.model.MerriamWebster;
 
 import java.util.ArrayList;
 

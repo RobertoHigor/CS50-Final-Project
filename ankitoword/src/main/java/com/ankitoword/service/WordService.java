@@ -3,7 +3,7 @@ package com.ankitoword.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ankitoword.model.Dicionario;
+import com.ankitoword.model.MerriamWebster.RootWebster;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,17 +22,17 @@ public class WordService {
     @Value("${merriam.key}")
     private String APIKey;
 
-    public List<Dicionario> getWords(String palavra) {
+    public List<RootWebster> getWords(String palavra) {
         
-        // OMono permite tratar o retorno quando a requisição finalizar sem bloquear o método.
+        // O Mono permite tratar o retorno quando a requisição finalizar sem bloquear o método.
         // Um teste possível é checar se o tamanho da lista é >= 0
-        List<Dicionario> dicionarios = new ArrayList<>();
+        List<RootWebster> dicionarios = new ArrayList<>();
         try {
-            Flux<Dicionario> fluxDicionario = this.webClient
+            Flux<RootWebster> fluxDicionario = this.webClient
             .get()
             .uri(builder -> builder.path("/"+palavra).queryParam("key", APIKey).build())
             .retrieve() //Retorna o response-spec
-            .bodyToFlux(Dicionario.class);
+            .bodyToFlux(RootWebster.class);
             // Em vez do retrieve(), existe o exchange() que retorna os cabeçalhos e permite tratar erros.
             
             dicionarios = fluxDicionario.collectList().block();

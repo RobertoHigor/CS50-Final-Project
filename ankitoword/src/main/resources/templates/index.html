@@ -12,8 +12,8 @@
 <body>
 <div class="container">
     <h1>Search a word definition</h1>
-    <form class ="form-group" th:action="@{/palavras}" method="get">
-        <input type="text" class="form-control" name="search" id="search" th:value="${param.search}" required placeholder="Word to search"/>
+    <form class ="form-inline" th:action="@{/palavras}" method="get">
+        <input type="text" class="form-control mr-2" name="search" id="search" th:value="${param.search}" required placeholder="Word to search"/>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
     
@@ -21,17 +21,40 @@
 
     <!-- Loop de formulários-->
     <div class="row justify-content-center">    
-        <th:block th:each="tempPalavra : ${palavras}">
+        <th:block th:each="appShortDef : ${palavras}">
             <div class="card col-sm-3 m-2">
-                <form action="#" th:object="${tempPalavra}">
+                <form action="#" th:action="@{/save}" th:object="${appShortDef}" method="POST">
                     <div class="form-group">
+                        
+                        <!-- Values for data binding-->
+                        <input type="hidden" th:field="*{hw}"/>
+                        <input type="hidden" th:field="*{fl}"/>
+                        <input type="hidden" th:field="*{def}"/>
+
+                        <!-- Front-->
                         <label for="front" class="card-title">Front</label>
                         <input type="text" th:value="*{hw} + ' ' + *{fl}" id="front" class="form-control"/>
-
+                        <!-- Back-->
                         <label for="back">Back</label>
-                        <textarea rows="3" class="form-control" id="back" th:inline="text"> [[*{def[0]}]] </textarea>
+                        <textarea name="back" rows="3" class="form-control" id="back" th:inline="text"> [[*{def[0]}]] </textarea>
                         <hr>
-                        <button type="submit" class="btn btn-primary">Save</button>
+
+                        <!-- Deck names-->
+                        <div class="form-row">
+                            <div class="col">                                
+                                <select class="form-control" name="deck" required>
+                                    <option selected disabled>Deck</option>
+                                    <option th:each="deck : ${decks}"
+                                            th:value=${deck}
+                                            th:text=${deck}></option>
+                                </select>
+                            </div>
+                            <!-- Save Button-->
+                            <div class="col">
+                                <button type="submit" class="form-control btn btn-primary">Save</button>
+                            </div>
+                           
+                        </div>
                     </div>
                 </form>  
             </div>  
