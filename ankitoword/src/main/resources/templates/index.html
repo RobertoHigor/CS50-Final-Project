@@ -10,56 +10,18 @@
     <title>Document</title>
 </head>
 <body>
-<div class="container">
+<div class="container">    
+    <!-- Formulário para definir a URL do Anki -->
     <h1>Search a word definition</h1>
-    <form class ="form-inline" th:action="@{/palavras}" method="get">
-        <input type="text" class="form-control mr-2" name="search" id="search" th:value="${param.search}" required placeholder="Word to search"/>
+
+    <form class ="form-row" th:action="@{/anki}" method="POST">
+        <input type="text" class="col form-control mr-2" name="ankiUrl" id="ankiUrl" required placeholder="Type your Ank URL e.g: http://127.0.0.1:8765"/>
         <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-    
+    </form>    
     <hr>
 
-    <!-- Loop de formulários-->
-    <div class="row justify-content-center">    
-        <th:block th:each="palavra : ${palavras}">
-            <div class="card col-sm-3 m-2">
-                <form action="#" th:action="@{/save}" th:object="${palavra}" method="POST">
-                    <div class="form-group">
-                        
-                        <!-- Values for data binding-->
-                        <input name="hw" type="hidden" th:value="*{hw}"/>
-                        <input name="fl" type="hidden" th:value="*{fl}"/>
-                        
-
-                        <!-- Front-->
-                        <label for="front" class="card-title">Front</label>
-                        <input type="text" th:value="${palavra.hw} + ' ' + ${palavra.fl}" id="front" class="form-control"/>
-                        <!-- Back-->
-                        <label for="back">Back</label>
-                        <textarea name="back" rows="3" class="form-control" id="back" th:inline="text"> [[${palavra.def[0]}]] </textarea>
-                        <hr>
-
-                        <!-- Deck names-->
-                        <div class="form-row">
-                            <div class="col">                                
-                                <select class="form-control" name="deck" required>
-                                    <option selected disabled>Deck</option>
-                                    <option th:each="deck : ${decks}"
-                                            th:value='${deck}'
-                                            th:text=${deck}></option>
-                                </select>
-                            </div>
-                            <!-- Save Button-->
-                            <div class="col">
-                                <button type="submit" class="form-control btn btn-primary">Save</button>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </form>  
-            </div>  
-        </th:block>  
-    </div>
+    <!-- Alerta caso não exista sessão-->
+    <h2 class="text-danger" th:text="${error}"></h2>
 </div>
 </body>
 </html>

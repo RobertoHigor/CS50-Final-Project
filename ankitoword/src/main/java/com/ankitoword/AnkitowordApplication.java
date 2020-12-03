@@ -24,7 +24,7 @@ public class AnkitowordApplication {
 	@Bean
 	public WebClient ankiWebClient(WebClient.Builder builder) {		
 		return builder
-			.baseUrl("http://localhost:8765/")
+			//.baseUrl("http://localhost:8765/")
 			.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.build();
 	}

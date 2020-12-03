@@ -23,15 +23,14 @@ import reactor.core.publisher.Mono;
 public class AnkiService {
     
     //TODO: Receber resposta do POST diretamente como Object, ao invés de String JSON
-    //TODO: Testar o envio de sub-cartões, como English::verbs
 
     @Autowired
     private WebClient ankiWebClient;
 
-    public List<String> getAllDecks() {      
+    public List<String> getAllDecks(String ankiUrl) {      
         Action action = new Action("deckNames", 6);                       
                                 
-        Mono<String> monoAnki= this.ankiWebClient.post().uri("/")
+        Mono<String> monoAnki= this.ankiWebClient.post().uri(ankiUrl)
             .accept(MediaType.APPLICATION_JSON)
             .bodyValue(action)
             .retrieve().bodyToMono(String.class);
@@ -49,7 +48,7 @@ public class AnkiService {
         return decks;
     }
 
-	public Anki save(AppShortDef tempPalavra, String deck) {
+	public Anki save(String ankiUrl, AppShortDef tempPalavra, String deck) {
         String frontText = tempPalavra.getHw() + " " + tempPalavra.getFl();
         System.out.println("Front Text"+ frontText+"\n\n");
 
@@ -67,7 +66,7 @@ public class AnkiService {
         System.out.println("Objeto Action: " + action.toString());
 
         // Enviando o Json para o Anki
-        Mono<String> monoAnki = this.ankiWebClient.put().uri("/")
+        Mono<String> monoAnki = this.ankiWebClient.put().uri(ankiUrl)
             .accept(MediaType.APPLICATION_JSON).bodyValue(action)
             .retrieve().bodyToMono(String.class);
         
