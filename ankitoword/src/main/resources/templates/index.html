@@ -45,7 +45,7 @@
                                 <select class="form-control" name="deck" required>
                                     <option selected disabled>Deck</option>
                                     <option th:each="deck : ${decks}"
-                                            th:value=${deck}
+                                            th:value='${deck}'
                                             th:text=${deck}></option>
                                 </select>
                             </div>

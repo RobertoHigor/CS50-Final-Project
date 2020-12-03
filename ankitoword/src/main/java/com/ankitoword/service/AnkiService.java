@@ -1,6 +1,7 @@
 package com.ankitoword.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.ankitoword.Helpers.JsonHelper;
@@ -27,7 +28,7 @@ public class AnkiService {
     @Autowired
     private WebClient ankiWebClient;
 
-    public Anki getAllDecks() {      
+    public List<String> getAllDecks() {      
         Action action = new Action("deckNames", 6);                       
                                 
         Mono<String> monoAnki= this.ankiWebClient.post().uri("/")
@@ -37,11 +38,15 @@ public class AnkiService {
 
         //https://stackoverflow.com/questions/62915284/spring-webclient-not-processing-json-content
         String jsonValue = monoAnki.block();
+
         System.out.println("Cartões retornados: "+jsonValue);        
 
+        // Getting result as a List<String>
         Anki ankiObject = JsonHelper.toObject(jsonValue, Anki.class);
+        List<String> decks = ankiObject.getResult();
+        decks.sort(Comparator.naturalOrder());
     
-        return ankiObject;
+        return decks;
     }
 
 	public Anki save(AppShortDef tempPalavra, String deck) {
@@ -72,5 +77,5 @@ public class AnkiService {
         // Convertendo a resposta para um objeto Anki
         Anki ankiObject = JsonHelper.toObject(jsonValue, Anki.class);
         return ankiObject;
-	}
+    }
 }

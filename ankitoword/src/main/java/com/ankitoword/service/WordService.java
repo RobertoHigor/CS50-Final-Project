@@ -3,6 +3,8 @@ package com.ankitoword.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ankitoword.model.MerriamWebster.AppShortDef;
+import com.ankitoword.model.MerriamWebster.Meta;
 import com.ankitoword.model.MerriamWebster.RootWebster;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class WordService {
     @Value("${merriam.key}")
     private String APIKey;
 
-    public List<RootWebster> getWords(String palavra) {
+    public List<AppShortDef> getWords(String palavra) {
         
         // O Mono permite tratar o retorno quando a requisição finalizar sem bloquear o método.
         // Um teste possível é checar se o tamanho da lista é >= 0
@@ -48,6 +50,28 @@ public class WordService {
         * do código continua a ser executado mesmo antes da requisição terminar.
         * Deve-se tomar cuidado pois é possível retoranr o método antes da requsição.
         */
-        return dicionarios;
+        List<AppShortDef> palavras = rootToAppShortDef(dicionarios);
+        return palavras;
+    }
+
+    private List<AppShortDef> rootToAppShortDef(List<RootWebster> myDicionarios) {
+         // Criar uma lista com as metas
+         List<Meta> listaMetas = new ArrayList<>();
+         for (RootWebster dicionario : myDicionarios){
+             if (dicionario.getMeta().getAppShortDef() != null){
+                 //System.out.println("Objeto adicionado");
+                 listaMetas.add(dicionario.getMeta());
+             } else {
+                 //System.out.println("Entrou no else");
+             }
+         }
+ 
+         // Pegar os dados das metas e criar uma lista de palavras do AppShortDef
+         List<AppShortDef> palavras = new ArrayList<>();
+         for (Meta meta : listaMetas){          
+             palavras.add(meta.getAppShortDef());
+         }
+        
+        return palavras;
     }
 }

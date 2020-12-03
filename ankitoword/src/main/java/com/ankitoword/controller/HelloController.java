@@ -1,6 +1,7 @@
 package com.ankitoword.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ankitoword.model.MerriamWebster.AppShortDef;
@@ -17,15 +18,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-//@RestController
 @Controller
 public class HelloController {
 
+    // Dependency Injection
     @Autowired
     private WordService wordService;
-
     @Autowired
     private AnkiService ankiService;
+
+    // Endpoints
 
     @GetMapping("/palavras")
     public String listWords(
@@ -36,37 +38,20 @@ public class HelloController {
             return "index";
         }
 
-        List<RootWebster> listaDicionarios;
-        List<String> listaDecks;
+        List<AppShortDef> palavras;
+        List<String> decks;
         try
         {
-            listaDicionarios = wordService.getWords(palavra);
-            listaDecks = ankiService.getAllDecks().getResult();
+            palavras = wordService.getWords(palavra);
+            decks = ankiService.getAllDecks();
         } catch (DecodingException exc) {
             System.out.println(exc);
             return "index";
         }    
-
-        // Criar uma lista com as metas
-        List<Meta> listaMetas = new ArrayList<>();
-        for (RootWebster dicionario : listaDicionarios){
-            if (dicionario.getMeta().getAppShortDef() != null){
-                //System.out.println("Objeto adicionado");
-                listaMetas.add(dicionario.getMeta());
-            } else {
-                //System.out.println("Entrou no else");
-            }
-        }
-
-        // Pegar os dados das metas e criar uma lista de palavras do AppShortDef
-        List<AppShortDef> palavras = new ArrayList<>();
-        for (Meta meta : listaMetas){          
-            palavras.add(meta.getAppShortDef());
-        }
        
         // Adicionar as palavras da lista (contendo palavra, tipo e definição)
         theModel.addAttribute("palavras", palavras);
-        theModel.addAttribute("decks", listaDecks);
+        theModel.addAttribute("decks", decks);
         
         return "index";    
     }
@@ -78,9 +63,9 @@ public class HelloController {
         @RequestParam(value = "hw") String hw,
         @RequestParam(value = "fl") String fl) {
 
-        System.out.println("APPSHORTDEF: " + fl);
-        System.out.println("APPSHORTDEF: " + hw);
-        System.out.println("@@@@@@@@@@@@@"+deck);
+        System.out.println("Word type: " + fl);
+        System.out.println("Word name: " + hw);
+        System.out.println("Deck Selected" + deck);
 
         AppShortDef appShortDef = new AppShortDef(hw, fl, def);
         ankiService.save(appShortDef, deck);    
