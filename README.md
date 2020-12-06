@@ -18,3 +18,6 @@ Then, the use is redirected to a page where He can search a word definition. Aft
 Finally, after editing the card and choosing the deck which to send the word, the user can see that it was added to Anki, using It's word class as a tag.
 
 ![Showing the card on Anki](src/main/resources/static/img/project_anki.jpg)
+
+## API Key
+You can set up the API key in `application.properties`, creating a property named `merriam.key`.
